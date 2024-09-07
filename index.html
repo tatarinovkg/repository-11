@@ -77,8 +77,16 @@
             justify-content: center;
             margin-bottom: 20px;
         }
+        .button-group {
+            display: flex;
+            justify-content: space-between; /* Равномерное распределение кнопок */
+            margin-bottom: 20px;
+            width: 100%; /* Ширина кнопок равна ширине контейнера полей */
+            gap: 20px; /* Расстояние между кнопками */
+        }
+
         .button-option {
-            flex: 1;
+            flex: 1; /* Кнопки занимают равную ширину */
             padding: 15px;
             background-color: #007bff;
             color: white;
@@ -87,11 +95,12 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s;
-            margin: 0 10px;
         }
+
         .button-option.active {
             background-color: #0056b3;
         }
+
         .button-option:hover {
             background-color: #0056b3;
         }
