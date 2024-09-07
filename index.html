@@ -57,8 +57,9 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.5; /* Добавлено для лучшей читаемости */
             resize: vertical; /* Ограничение изменения размера только по вертикали */
-            min-height: 50px; /* Минимальная высота */
-            max-height: 200px; /* Максимальная высота */
+            height: 150px;
+            min-height: 50px;
+            max-height: 250px;
         }
         .form-group input:focus,
         .form-group select:focus,
@@ -163,6 +164,9 @@
             .button-option {
                 font-size: 14px;
                 padding: 12px;
+            }
+            .form-group textarea {
+                width: 100%; /* Устанавливаем ширину на 100% */
             }
         }
     </style>
