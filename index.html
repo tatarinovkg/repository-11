@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Создание продукта</title>
     <style>
-        /* Стили, адаптированные для кнопок и формы загрузки файла */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: #f0f0f5;
@@ -13,13 +12,11 @@
             box-sizing: border-box;
             margin: 0;
         }
-
         .container {
             max-width: 90%;
             margin: 0 auto;
             text-align: center;
         }
-
         .container h2 {
             text-align: center;
             margin-bottom: 20px;
@@ -27,19 +24,16 @@
             color: #000000;
             animation: fadeIn 1s ease-in-out;
         }
-
         .form-group {
             margin-bottom: 20px;
             animation: fadeInUp 0.5s ease-in-out;
         }
-
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
             color: #333333;
         }
-
         .form-group input,
         .form-group select,
         .form-group textarea {
@@ -52,22 +46,48 @@
             transition: border-color 0.5s ease;
         }
 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.5s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.5; /* Добавлено для лучшей читаемости */
+            resize: vertical; /* Ограничение изменения размера только по вертикали */
+            height: 150px;
+            min-height: 50px;
+            max-height: 250px;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: none;
+        }
         .form-group input.error,
         .form-group select.error,
         .form-group textarea.error {
             border-color: #ff0000;
         }
-
         .button-group {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             margin-bottom: 20px;
-            width: 100%;
-            gap: 20px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between; /* Равномерное распределение кнопок */
+            margin-bottom: 20px;
+            width: 100%; /* Ширина кнопок равна ширине контейнера полей */
+            gap: 20px; /* Расстояние между кнопками */
         }
 
         .button-option {
-            flex: 1;
+            flex: 1; /* Кнопки занимают равную ширину */
             padding: 15px;
             background-color: #007bff;
             color: white;
@@ -85,79 +105,69 @@
         .button-option:hover {
             background-color: #0056b3;
         }
-
-        .input-file {
-            position: relative;
-            display: inline-block;
-            width: 100%;
-            text-align: left;
-            margin-top: 10px;
+        .fade-out {
+            animation: fadeOutUp 0.5s ease-in-out forwards; /* Анимация исчезновения */
         }
-
-        .input-file-text {
-            padding: 0 10px;
-            line-height: 40px;
-            text-align: left;
-            height: 40px;
-            display: block;
-            float: left;
-            box-sizing: border-box;
-            width: calc(100% - 150px);
-            border-radius: 6px 0px 0 6px;
-            border: 1px solid #ddd;
-            background-color: #fff;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-weight: normal;
+        .fade-in {
+            animation: fadeInUp 0.5s ease-in-out; /* Анимация появления */
         }
-
-        .input-file-btn {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            outline: none;
-            text-decoration: none;
-            font-size: 14px;
-            vertical-align: middle;
-            color: rgb(255, 255, 255);
-            text-align: center;
-            border-radius: 0 10px 10px 0;
-            background-color: #007bff;
-            line-height: 22px;
-            height: 40px;
-            padding: 10px 20px;
-            box-sizing: border-box;
-            border: none;
-            margin: 0;
-            transition: background-color 0.2s;
-            font-weight: normal;
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-
-        .input-file input[type="file"] {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-
-        .input-file input[type="file"]:focus + .input-file-btn {
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+        @keyframes fadeOutUp {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+                height: 0; /* Исчезновение высоты */
+                padding: 0;
+                margin: 0;
+                overflow: hidden;
+            }
         }
-
-        .input-file:hover .input-file-btn {
-            background-color: #0056b3;
-        }
-
-        .input-file:active .input-file-btn {
-            background-color: #2E703A;
-        }
-
-        .input-file input[type="file"]:disabled + .input-file-btn {
-            background-color: #eee;
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                width: 100%;
+                max-width: none;
+                height: auto;
+                padding-bottom: 20px;
+            }
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                font-size: 14px;
+                padding: 10px;
+            }
+            .button-option {
+                font-size: 14px;
+                padding: 12px;
+            }
+            .form-group textarea {
+                width: 100%; /* Устанавливаем ширину на 100% */
+            }
         }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -199,44 +209,14 @@
         <label for="discountPrice">Введите цену со скидкой</label>
         <input type="text" id="discountPrice" name="discountPrice" placeholder="Цена со скидкой">
     </div>
-
-    <!-- Поле для загрузки фотографии -->
-    <div class="form-group">
-        <label class="input-file">
-            <span class="input-file-text">Файл не выбран</span>
-            <input type="file" id="productPhoto" accept="image/*">
-            <span class="input-file-btn">Выберите файл</span>
-        </label>
-    </div>
 </div>
+
 <script>
     let tg = window.Telegram.WebApp;
 
     tg.expand();
     tg.MainButton.setText("Отправить");
     tg.MainButton.show();
-
-    let photoBase64 = "noPhoto"; // Переменная для хранения base64-кода фотографии
-
-    // Обработка файла
-    document.getElementById('productPhoto').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        const fileNameSpan = document.querySelector('.input-file-text');
-
-        if (!file) {
-            photoBase64 = "noPhoto"; // Если файл не выбран, устанавливаем 'noPhoto'
-            fileNameSpan.textContent = "Файл не выбран"; // Обновляем текст
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            photoBase64 = e.target.result.split(',')[1]; // Сохранение base64, удаление "data:image/jpeg;base64,"
-        };
-        reader.readAsDataURL(file); // Чтение файла как data URL
-
-        fileNameSpan.textContent = file.name; // Отображение имени файла
-    });
 
     // Логика переключения кнопок и отображения полей описания
     function toggleDescription(withDescription) {
@@ -332,8 +312,7 @@
             description: descriptionValue,
             price: price.value.trim(),
             discount: discountValue,
-            discountPrice: discountPriceValue,
-            photo: photoBase64 // Добавляем фото в формате base64 или 'noPhoto'
+            discountPrice: discountPriceValue
         };
 
         // Отправка данных в Web App
@@ -342,6 +321,7 @@
         // Закрытие окна Web App
         tg.close();
     });
+
 </script>
 </body>
 </html>
