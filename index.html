@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Создание продукта</title>
     <style>
-        /* Ваши стили остаются без изменений */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: #f0f0f5;
@@ -170,65 +169,12 @@
                 width: 100%; /* Устанавливаем ширину на 100% */
             }
         }
-
-        /* Стили для кнопки загрузки файла */
-        .input-file {
-            position: relative;
-            display: inline-block;
-            width: 100%; /* Ширина кнопки соответствует ширине контейнера полей */
-            margin-top: 20px; /* Отступ сверху */
-        }
-        .input-file span {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            outline: none;
-            text-decoration: none;
-            font-size: 16px;
-            vertical-align: middle;
-            color: rgb(255, 255, 255);
-            text-align: center;
-            border-radius: 10px;
-            background-color: #007bff;
-            line-height: 22px;
-            height: 40px;
-            padding: 10px 20px;
-            box-sizing: border-box;
-            border: none;
-            margin: 0;
-            transition: background-color 0.3s;
-            width: 100%; /* Ширина кнопки соответствует ширине контейнера полей */
-            white-space: nowrap; /* Запрещаем перенос текста */
-            overflow: hidden; /* Скрываем текст, который не помещается */
-            text-overflow: ellipsis; /* Добавляем троеточие, если текст не помещается */
-        }
-        .input-file input[type=file] {
-            position: absolute;
-            z-index: -1;
-            opacity: 0;
-            display: block;
-            width: 0;
-            height: 0;
-        }
-        .input-file:hover span {
-            background-color: #0056b3;
-        }
-        .input-file:active span {
-            background-color: #004494;
-        }
-        .input-file input[type=file]:disabled + span {
-            background-color: #eee;
-        }
-        .input-file.error span {
-            border-color: #ff0000;
-        }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 <div class="container">
     <h2>Введите данные о продукте</h2>
-    <!-- Поля ввода данных остаются без изменений -->
     <div class="form-group">
         <label for="productName">Введите название игры/продукта</label>
         <input type="text" id="productName" name="productName" placeholder="Название продукта">
@@ -263,36 +209,14 @@
         <label for="discountPrice">Введите цену со скидкой</label>
         <input type="text" id="discountPrice" name="discountPrice" placeholder="Цена со скидкой">
     </div>
-
-    <form method="post" enctype="multipart/form-data">
-        <label class="input-file">
-            <input type="file" id="fileInput" name="file"> <!-- Добавлен id -->
-            <span>Выберите файл</span>
-        </label>
-    </form>
-
 </div>
+
 <script>
     let tg = window.Telegram.WebApp;
 
     tg.expand();
     tg.MainButton.setText("Отправить");
     tg.MainButton.show();
-
-    const fileInput = document.getElementById('fileInput');  // Убедитесь, что у input есть id="fileInput"
-    const fileLabel = document.querySelector('.input-file span');
-    const defaultLabelText = "Выберите файл";  // Основное название
-
-    fileInput.addEventListener('change', function() {
-        if (fileInput.files.length > 0) {
-            // Если файл выбран, отображаем его имя
-            let fileName = fileInput.files[0].name;
-            fileLabel.textContent = fileName; // Устанавливаем текст на кнопке
-        } else {
-            // Если файл не выбран или отменён, отображаем основное название
-            fileLabel.textContent = defaultLabelText;
-        }
-    });
 
     // Логика переключения кнопок и отображения полей описания
     function toggleDescription(withDescription) {
@@ -331,15 +255,6 @@
             withoutDiscountBtn.classList.add('active');
         }
     }
-    
-    // Функция для конвертации файла в Base64
-    function encodeFileToBase64(file, callback) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            callback(reader.result);
-        };
-        reader.readAsDataURL(file); // Чтение файла как Data URL
-    }
 
     // Изначальная настройка - скрыть/показать поля по умолчанию
     toggleDescription(true);
@@ -351,8 +266,6 @@
         const description = document.getElementById('description');
         const price = document.getElementById('price');
         const discountPrice = document.getElementById('discountPrice');
-        const fileInput = document.getElementById('fileInput');
-        const fileLabel = document.querySelector('.input-file');
 
         let hasError = false; // Флаг для отслеживания ошибок
 
@@ -373,7 +286,6 @@
         let descriptionValue = "noDescription";
         let discountValue = "0";
         let discountPriceValue = "noDiscountPrice";
-        let fileData = null;
 
         // Проверка поля "Описание" только если оно активно
         if (!document.getElementById('withoutDescription').classList.contains('active')) {
@@ -388,43 +300,28 @@
             discountPriceValue = discountPrice.value.trim(); // Получаем значение цены со скидкой
         }
 
-        // Проверка наличия файла
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            encodeFileToBase64(file, function(encodedFile) {
-                fileData = encodedFile; // Получаем закодированный файл
-                proceedWithData();
-            });
-        } else {
-            fileLabel.classList.add('error');
-            hasError = true;
-            proceedWithData();
+        // Если есть ошибки, отменить отправку данных
+        if (hasError) {
+            return;
         }
 
-        function proceedWithData() {
-            // Если есть ошибки, отменить отправку данных
-            if (hasError) {
-                return;
-            }
+        // Если ошибок нет, собрать данные и отправить
+        const data = {
+            appId: 'creatingProduct',
+            productName: productName.value.trim(),
+            description: descriptionValue,
+            price: price.value.trim(),
+            discount: discountValue,
+            discountPrice: discountPriceValue
+        };
 
-            // Если ошибок нет, собрать данные и отправить
-            const data = {
-                appId: 'creatingProduct',
-                productName: productName.value.trim(),
-                description: descriptionValue,
-                price: price.value.trim(),
-                discount: discountValue,
-                discountPrice: discountPriceValue,
-                photo: fileData // Включить закодированный файл в данные
-            };
+        // Отправка данных в Web App
+        tg.sendData(JSON.stringify(data));
 
-            // Отправка данных в Web App
-            tg.sendData(JSON.stringify(data));
-
-            // Закрытие окна Web App
-            tg.close();
-        }
+        // Закрытие окна Web App
+        tg.close();
     });
+
 </script>
 </body>
 </html>
